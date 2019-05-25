@@ -5,6 +5,8 @@ from sqlalchemy.orm import sessionmaker
 
 from database_setup import Restaurant, Base, MenuItem
 
+import webserver_sql
+
 engine = create_engine('sqlite:///restaurantmenu.db')
 # Bind the engine to the metadata of the Base class so that the
 # declaratives can be accessed through a DBSession instance
@@ -31,20 +33,30 @@ for table_name in inspector.get_table_names():
 
 #select the contents of each table
 selstmt = """SELECT * FROM """ + table_name
-print(selstmt)
+#print(selstmt)
 #   resultset = session.execute(selstmt).fetchall()
 
 #   for i in resultset:
 #       print(i)
 
-selstmt = selstmt + """ ORDER BY 2 """   
-#   resultset = session.execute(selstmt).fetchall()
+selstmt = """SELECT restaurant_id, count(*) as numItems FROM menu_item GROUP BY restaurant_id"""
+print(selstmt)
+resultset = session.execute(selstmt).fetchall()
 
-   #for i in resultset:
-   #    print(i)
+for i in resultset:
+    print("id %s: %s" % (i.restaurant_id, i.numItems))
 
-items = session.query(MenuItem).all()
-print(items[0].name)
+
+
+selstmt = """SELECT id, name, description, price, course, restaurant_id FROM menu_item WHERE restaurant_id=1"""
+selstmt = selstmt + """ ORDER BY 1 """   
+print(selstmt)
+resultset = session.execute(selstmt).fetchall()
+#for i in resultset:
+    #print(i)
+
+#items = session.query(MenuItem).all()
+#print(items[0].name)
 
 ### use filterby to isolate a specific column in the table.
 veggieBurgers = session.query(MenuItem).filter_by(name = 'Veggie Burger')
@@ -54,17 +66,21 @@ for vburger in veggieBurgers:
 # get only 1st veggie burger item from urban veggie burger restaurant
 # id value found from previous query.
 urbanVeggieBurger = session.query(MenuItem).filter_by(id = 1).one()
-print(urbanVeggieBurger.price)
+#print(urbanVeggieBurger.price)
 urbanVeggieBurger.price = '$7.50'
-session.add(urbanVeggieBurger)
-session.commit()
+#session.add(urbanVeggieBurger)
+#session.commit()
 
-for vburger in veggieBurgers:
-    print(vburger.id, vburger.price, vburger.restaurant.name)
+#for vburger in veggieBurgers:
+#    print(vburger.id, vburger.price, vburger.restaurant.name)
 
 #delete example
-spinach = session.query(MenuItem).filter_by(name = 'Spinach Ice Cream').one()
-print(spinach)
-session.delete(spinach)
-session.commit()
-print(spinach)
+spinach = session.query(Restaurant).filter_by(id = '18').one()
+#print(spinach.name)
+#session.delete(spinach)
+#session.commit()
+#print(spinach)
+
+#rname = webserver_sql.get_restaurant_name_from_id(12)
+rname = session.query(Restaurant).filter_by(id=12).one()
+print(rname.name)

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<!--HTML template for edit restaurant page rendering -->
+{# 
+    {{ }} contains expression to print to the template output 
+    {% %} contains statements
+#}
+
+<html>
+    <body>
+        
+        <h1>Edit Restaurant Name</h1>
+        <h2>Current Name: {{restaurant.name}}</h2>
+            
+        <form action='#' method='post'>
+            <input type='text' size='30' name='name' placeholder='New Name'>
+            <input type='submit' value='Update'>
+            <a href='#'>cancel</a>
+        </form>
+        
+    </body>
+</html>

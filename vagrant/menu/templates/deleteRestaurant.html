@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<!--HTML template for delete restaurant page rendering -->
+{# 
+    {{ }} contains expression to print to the template output 
+    {% %} contains statements
+#}
+
+<html>
+    <body>
+        
+        <h1>Delete Restaurant?</h1>
+        <h2>Are you sure you want to delete restaurant: {{restaurant.name}}?</h2>
+            
+        <form action='#' method='post'>
+            Are you sure uyou want to delete this restaurant?
+            <input type='submit' value='Delete'>
+            <a href='{{ url_for("showRestaurants") }}'>cancel</a>
+        </form>
+        
+    </body>
+</html>

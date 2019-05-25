@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<!--HTML template for rendering page to add a new menu item -->
+{# 
+    {{ }} contains expression to print to the template output 
+    {% %} contains statements
+#}
+
+<html>
+    <body>
+        
+        <h1>Add a New Menu Item</h1>
+
+        <form action='#' method='post'>
+            <table>
+                <tr>
+                    <td>Name: </td>
+                    <td><input type='text' size='30' name='name' placeholder='item name'></td>
+                </tr>
+                <tr>
+                    <td>Description: </td>
+                    <td><input type='text' size='30' name='name' placeholder='item description'></td>
+                
+                </tr>
+                <tr>
+                    <td>Price: </td>
+                    <td><input type='text' size='30' name='name' placeholder='$#.##'></td>
+                </tr>
+                <tr>
+                    <td>Course: </td>
+                    <td>
+                        <input type='radio' name='course' value='Appetizer'>Appetizer<br>
+                        <input type='radio' name='course' value='Entree'>Entree<br>
+                        <input type='radio' name='course' value='Dessert'>Dessert<br>
+                        <input type='radio' name='course' value='Beverage'>Beverage<br>
+                    </td>
+                </tr>
+            </table>   
+
+            <input type='submit' value='Add Item'>
+            <a href='#'>cancel</a>
+        </form>
+        
+    </body>
+</html>
