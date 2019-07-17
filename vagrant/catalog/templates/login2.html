@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="//apis.google.com/js/platform.js?onload=start" async defer> </script>
+    <script>
+        function start() {
+            gapi.load('auth2', function() {
+                auth2 = gapi.auth2.init({
+                    clientid="273877864279-qe4me0hup9j3p6cpbpnihmrngaavfud4.apps.googleusercontent.com"
+                });
+            });
+        }
+    </script>
+    <!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
+</head>
+
+<body>
+    <!-- GOOGLE PLUS SIGN IN BUTTON-->
+    <!-- data-scope is the resource info wanted
+        data-redirecturi is the 1-time code flow data
+        data-accesstype offline can access google if user is not logged in
+        data-cooliepolicy is scope of URI that can access the cookie 
+        data-callback is successful callback function
+        data=approvalpromt is whether the user needs to login everytime
+            - may disable in production.
+    -->
+    <div id="signinButton">
+        <p>{{STATE}}</p>
+        <span class="g-signin" data-scope="openid email"
+            data-clientid="273877864279-qe4me0hup9j3p6cpbpnihmrngaavfud4.apps.googleusercontent.com"
+            data-redirecturi="postmessage" data-accesstype="offline" data-cookiepolicy="single_host_origin"
+            data-callback="signInCallback" data-approvalprompt="force">
+        </span>
+    </div>
+    <!--END GOOGLE PLUS SIGN IN BUTTON -->
+
+    <div id="result"></div>
+
+    <script>
+        function signInCallback(authresult) {
+            //callback function - if a code is present and can be pulled, then success
+            window.alert('inside');
+            if (authresult['code']) {
+                //hide the sign-in button since now authorized
+                $('signinButton').attr('style', 'display:none');
+            }
+            else {
+                window.alert('else');
+            }
+
+            // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
+            $.ajax({
+                type: 'POST',
+                url: '/gconnect?state={{STATE}}',   // create a URL to go to, send Google login state
+                processData: false,                 // do not process data into a JSON component
+                data: authResult['code'],           // attach return array from Google authoization
+                contentType: 'application/octet-stream; charset=utf-8',
+                success: function (result) {
+                    console.log('success funtion')
+                    // Handle or verify the server response if necessary.
+                    if (result) {
+                        $('#result').html('Login Successful!</br>' + result + '</br>Redirecting...')
+                        setTimeout(function () {
+                            // pause (timeout) complete, go to site
+                            window.location.href = "/restaurant";
+                        }, 4000);
+                    } else if (authResult['error']) {
+                        // error occurred, log it but do not display it
+                        console.log('There was an error: ' + authResult['error']);
+                    } else {
+                        // something did not complete, notify user
+                        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+                    }
+                } // end success()
+            }); // end ajax
+        } // end function
+
+    </script>
+
+</body>
+
+</html>
